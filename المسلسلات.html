@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>قائمة المسلسلات</title>
+</head>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #1E90FF, #FFD700, #FFCC00);
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.series-box {
+    background-color: #1E90FF; /* الأزرق */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    max-width: 300px;
+    text-align: center;
+    margin: 10px;
+    cursor: pointer;
+    display: inline-block;
+    transition: transform 0.3s;
+}
+
+.series-box:hover {
+    transform: scale(1.05);
+}
+
+.series-image {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.series-title {
+    margin-top: 10px;
+    color: #FFD700; /* الذهبي */
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    color: #ff0000;
+    cursor: pointer;
+}
+
+.episodes button {
+    background-color: #FFD700; /* زر الحلقات باللون الذهبي */
+    border: none;
+    color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.episodes button:hover {
+    background-color: #FFC300; /* لون أغمق عند التمرير */
+}
+
+.video-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+#videoPlayer {
+    width: 80%;
+    max-width: 600px;
+}
+
+.video-popup .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    color: #ff0000;
+    cursor: pointer;
+}
+
+</style>
+<body>
+    <div id="series-container"></div>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup()">×</span>
+            <h2>قصة المسلسل</h2>
+            <p id="story">هنا يمكنك كتابة ملخص قصة المسلسل...</p>
+            <h3>الحلقات</h3>
+            <div class="episodes" id="episodes"></div>
+        </div>
+    </div>
+
+    <div id="videoPopup" class="video-popup">
+        <span class="close" onclick="closeVideo()">×</span>
+        <video id="videoPlayer" controls>
+            <source id="videoSource" src="" type="video/mp4">
+            متصفحك لا يدعم فيديو HTML5.
+        </video>
+    </div>
+
+    <script>
+        const seriesContainer = document.getElementById('series-container');
+
+// نموذج بيانات المسلسل
+const seriesData = Array.from({ length: 5000 }, (_, index) => ({
+    title: `مسلسل ${index + 1}`,
+    image: 'path_to_image.jpg', // استبدل برابط الصورة
+    story: `ملخص قصة مسلسل ${index + 1}...`,
+    episodes: Array.from({ length: 30 }, (_, i) => `حلقة ${i + 1}`)
+}));
+
+// إنشاء عناصر المسلسلات
+seriesData.forEach(series => {
+    const box = document.createElement('div');
+    box.className = 'series-box';
+    box.onclick = () => openPopup(series);
+
+    const img = document.createElement('img');
+    img.src = series.image;
+    img.alt = series.title;
+    img.className = 'series-image';
+
+    const title = document.createElement('h2');
+    title.className = 'series-title';
+    title.innerText = series.title;
+
+    box.appendChild(img);
+    box.appendChild(title);
+    seriesContainer.appendChild(box);
+});
+
+// فتح النافذة المنبثقة
+function openPopup(series) {
+    document.getElementById('story').innerText = series.story;
+    const episodesDiv = document.getElementById('episodes');
+    episodesDiv.innerHTML = ''; // إفراغ القائمة الحالية
+    series.episodes.forEach(episode => {
+        const button = document.createElement('button');
+        button.innerText = episode;
+        button.onclick = () => openVideo(`video/${episode}.mp4`); // استبدل برابط الفيديو الفعلي
+        episodesDiv.appendChild(button);
+    });
+    document.getElementById('popup').style.display = 'flex';
+}
+
+// إغلاق النافذة المنبثقة
+function closePopup() {
+    document.getElementById('popup').style.display = 'none';
+}
+
+// فتح الفيديو
+function openVideo(videoFile) {
+    document.getElementById('videoSource').src = videoFile;
+    document.getElementById('videoPlayer').load();
+    document.getElementById('videoPopup').style.display = 'flex';
+}
+
+// إغلاق الفيديو
+function closeVideo() {
+    document.getElementById('videoPopup').style.display = 'none';
+}
+
+    </script>
+</body>
+</html>

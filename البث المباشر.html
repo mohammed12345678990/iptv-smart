@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البث المباشر</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #1E90FF, #FFD700, #FFCC00);
+        }
+
+        .live-button {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            font-size: 24px;
+            color: white;
+            background-color: #1E90FF; /* الأزرق */
+            border: none;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .live-button:hover {
+            background-color: #0056b3; /* لون أغمق عند التمرير */
+        }
+    </style>
+</head>
+<body>
+    <div id="button-container"></div>
+
+    <script>
+        const buttonContainer = document.getElementById('button-container');
+
+        // إنشاء 8000 زر للبث المباشر
+        for (let i = 1; i <= 8000; i++) {
+            const button = document.createElement('button');
+            button.className = 'live-button';
+            button.innerText = `بث مباشر ${i}`;
+            button.onclick = () => alert(`تم الضغط على ${button.innerText}`); // يمكنك تغيير هذا إلى أي دالة أخرى
+            buttonContainer.appendChild(button);
+        }
+    </script>
+</body>
+</html>

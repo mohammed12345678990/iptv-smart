@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة الأفلام</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #1E90FF, #FFD700, #FFCC00);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .movie-box {
+            background-color: #1E90FF; /* الأزرق */
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            max-width: 300px;
+            text-align: center;
+            margin: 10px;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+
+        .movie-box:hover {
+            transform: scale(1.05);
+        }
+
+        .movie-image {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .movie-title {
+            margin-top: 10px;
+            color: #FFD700; /* الذهبي */
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .popup-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: #ff0000;
+            cursor: pointer;
+        }
+
+        .episodes button {
+            background-color: #FFD700; /* زر الحلقات باللون الذهبي */
+            border: none;
+            color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .episodes button:hover {
+            background-color: #FFC300; /* لون أغمق عند التمرير */
+        }
+
+        .video-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        #videoPlayer {
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .video-popup .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: #ff0000;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="movies-container"></div>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup()">×</span>
+            <h2>قصة الفيلم</h2>
+            <p id="story">هنا يمكنك كتابة ملخص قصة الفيلم...</p>
+            <h3>الحلقات</h3>
+            <div class="episodes" id="episodes"></div>
+        </div>
+    </div>
+
+    <div id="videoPopup" class="video-popup">
+        <span class="close" onclick="closeVideo()">×</span>
+        <video id="videoPlayer" controls>
+            <source id="videoSource" src="" type="video/mp4">
+            متصفحك لا يدعم فيديو HTML5.
+        </video>
+    </div>
+
+    <script>
+        const moviesContainer = document.getElementById('movies-container');
+
+        // نموذج بيانات الأفلام
+        const moviesData = Array.from({ length: 5000 }, (_, index) => ({
+            title: `فيلم ${index + 1}`,
+            image: 'path_to_image.jpg', // استبدل برابط الصورة
+            story: `ملخص قصة فيلم ${index + 1}...`,
+            video: `video/movie${index + 1}.mp4` // استبدل برابط الفيديو
+        }));
+
+        // إنشاء عناصر الأفلام
+        moviesData.forEach(movie => {
+            const box = document.createElement('div');
+            box.className = 'movie-box';
+            box.onclick = () => openPopup(movie);
+
+            const img = document.createElement('img');
+            img.src = movie.image;
+            img.alt = movie.title;
+            img.className = 'movie-image';
+
+            const title = document.createElement('h2');
+            title.className = 'movie-title';
+            title.innerText = movie.title;
+
+            box.appendChild(img);
+            box.appendChild(title);
+            moviesContainer.appendChild(box);
+        });
+
+        // فتح النافذة المنبثقة
+        function openPopup(movie) {
+            document.getElementById('story').innerText = movie.story;
+            const episodesDiv = document.getElementById('episodes');
+            episodesDiv.innerHTML = ''; // إفراغ القائمة الحالية
+
+            const button = document.createElement('button');
+            button.innerText = "مشاهدة الفيلم";
+            button.onclick = () => openVideo(movie.video);
+            episodesDiv.appendChild(button);
+
+            document.getElementById('popup').style.display = 'flex';
+        }
+
+        // إغلاق النافذة المنبثقة
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        // فتح الفيديو
+        function openVideo(videoFile) {
+            document.getElementById('videoSource').src = videoFile;
+            document.getElementById('videoPlayer').load();
+            document.getElementById('videoPopup').style.display = 'flex';
+        }
+
+        // إغلاق الفيديو
+        function closeVideo() {
+            document.getElementById('videoPopup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
